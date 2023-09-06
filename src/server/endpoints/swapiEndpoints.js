@@ -32,7 +32,21 @@ const applySwapiEndpoints = (server, app) => {
     });
 
     server.get('/hfswapi/getPlanet/:id', async (req, res) => {
-        res.sendStatus(501);
+        
+        app.db.populateDB();
+        try {
+            const planetId = req.params.id;
+            const planet = await app.db.swPlanet.findByPk(planetId,{
+            attributes: ['name', 'gravity'], 
+              });
+            if (!planet) {
+                return res.status(404).json({ error: 'planet not found' });
+            }
+            return res.json(planet);
+        } catch (error) {
+            console.error(error);
+    return res.status(500).json({ error: 'server error' });
+        }
     });
 
     server.get('/hfswapi/getWeightOnPlanetRandom', async (req, res) => {
