@@ -1,3 +1,4 @@
+const { json } = require("body-parser");
 
 const _isWookieeFormat = (req) => {
     if(req.query.format && req.query.format == 'wookiee'){
@@ -50,7 +51,16 @@ const applySwapiEndpoints = (server, app) => {
     });
 
     server.get('/hfswapi/getWeightOnPlanetRandom', async (req, res) => {
-        res.sendStatus(501);
+        app.db.populateDB();
+        const people= await app.db.swPeople.findByPk(1,{
+            attributes: ['mass'], 
+            });
+        const planet = await app.db.swPlanet.findByPk(1,{
+            attributes: ['gravity'], 
+              });
+      
+        const weight = await   app.swapiFunctions.getWeightOnPlanet(people.mass,planet.gravity)
+     res.send(JSON.stringify(weight));
     });
 
     server.get('/hfswapi/getLogs',async (req, res) => {
