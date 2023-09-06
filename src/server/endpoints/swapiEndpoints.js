@@ -16,12 +16,19 @@ const applySwapiEndpoints = (server, app) => {
 
     server.get('/hfswapi/getPeople/:id', async (req, res) => {
         app.db.populateDB();
-        const peopleId = req.params.id;
-        const people = await app.db.swPeople.findByPk(peopleId);
-        if (!people) {
-            return res.status(404).json({ error: 'Persona no encontrada' });
-          }
-          return res.json(people);
+        try {
+            const peopleId = req.params.id;
+            const people = await app.db.swPeople.findByPk(peopleId,{
+            attributes: ['name', 'mass','height','homeworld_name','homeworld_id'], 
+              });
+            if (!people) {
+                return res.status(404).json({ error: 'People not found' });
+            }
+            return res.json(people);
+        } catch (error) {
+            console.error(error);
+    return res.status(500).json({ error: 'server error' });
+        }
     });
 
     server.get('/hfswapi/getPlanet/:id', async (req, res) => {

@@ -27,13 +27,13 @@ El presente código despliega un servidor node.js/express sobre el que se busca 
 
 
 #### /hfswapi/getPeople/:id
-
+ 
 > Dado el ID válido de un personaje de la franquicia Star Wars, consultar en la Base de datos (BD) facilitada y retornar un objeto con los siguientes datos: 
 > - name: Nombre completo del personaje correspondiente al ID dado. 
 > - mass: Masa del personaje correspondiente al ID dado.
 > - height: Altura del personaje correspondiente al ID dado.
-> - homeworldName: nombre del planeta natal del personaje correspondiente al ID dado.
-> - homeworldId: Identificador del planeta natal del personaje correspondiente al ID dado.
+> - homeworld_name: nombre del planeta natal del personaje correspondiente al ID dado.
+> - homeworld_id: Identificador del planeta natal del personaje correspondiente al ID dado.
 >
 > En caso de que dichos datos no se encuentren disponibles en la BD, se habrá de consultar en la SWAPI (https://swapi.dev/) sobre el endpoint adecuado
 
