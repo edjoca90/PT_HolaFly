@@ -15,7 +15,13 @@ const applySwapiEndpoints = (server, app) => {
     });
 
     server.get('/hfswapi/getPeople/:id', async (req, res) => {
-        res.sendStatus(501);
+        app.db.populateDB();
+        const peopleId = req.params.id;
+        const people = await app.db.swPeople.findByPk(peopleId);
+        if (!people) {
+            return res.status(404).json({ error: 'Persona no encontrada' });
+          }
+          return res.json(people);
     });
 
     server.get('/hfswapi/getPlanet/:id', async (req, res) => {
