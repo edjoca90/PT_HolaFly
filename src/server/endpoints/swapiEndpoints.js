@@ -9,7 +9,6 @@ const _isWookieeFormat = (req) => {
 
 
 const applySwapiEndpoints = (server, app) => {
-
     server.get('/hfswapi/test', async (req, res) => {
         const data = await app.swapiFunctions.genericRequest('https://swapi.dev/api/', 'GET', null, true);
         res.send(data);
@@ -25,6 +24,11 @@ const applySwapiEndpoints = (server, app) => {
             if (!people) {
                 return res.status(404).json({ error: 'People not found' });
             }
+            app.db.logging.create({
+                action: req.path,
+                headers: req.headers,
+                ip: req.ip
+            });
             return res.json(people);
         } catch (error) {
             console.error(error);
@@ -43,6 +47,11 @@ const applySwapiEndpoints = (server, app) => {
             if (!planet) {
                 return res.status(404).json({ error: 'planet not found' });
             }
+            app.db.logging.create({
+                action: req.path,
+                headers: req.headers,
+                ip: req.ip
+            });
             return res.json(planet);
         } catch (error) {
             console.error(error);
@@ -61,6 +70,11 @@ const applySwapiEndpoints = (server, app) => {
               });
       
         const weight = await   app.swapiFunctions.getWeightOnPlanet(people.mass,planet.gravity)
+        app.db.logging.create({
+            action: req.path,
+            headers: req.headers,
+            ip: req.ip
+        });
      res.send(JSON.stringify(weight));
         } catch (error) {
             return res.status(500).json({ error: 'server error' });   
