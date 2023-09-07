@@ -51,7 +51,8 @@ const applySwapiEndpoints = (server, app) => {
     });
 
     server.get('/hfswapi/getWeightOnPlanetRandom', async (req, res) => {
-        app.db.populateDB();
+        try {
+            app.db.populateDB();
         const people= await app.db.swPeople.findByPk(1,{
             attributes: ['mass'], 
             });
@@ -61,6 +62,9 @@ const applySwapiEndpoints = (server, app) => {
       
         const weight = await   app.swapiFunctions.getWeightOnPlanet(people.mass,planet.gravity)
      res.send(JSON.stringify(weight));
+        } catch (error) {
+            return res.status(500).json({ error: 'server error' });   
+        }
     });
 
     server.get('/hfswapi/getLogs',async (req, res) => {
