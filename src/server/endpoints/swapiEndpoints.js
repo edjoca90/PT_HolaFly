@@ -31,7 +31,6 @@ const applySwapiEndpoints = (server, app) => {
             });
             return res.json(people);
         } catch (error) {
-            console.error(error);
     return res.status(500).json({ error: 'server error' });
         }
     });
@@ -53,21 +52,29 @@ const applySwapiEndpoints = (server, app) => {
                 ip: req.ip
             });
             return res.json(planet);
-        } catch (error) {
-            console.error(error);
-    return res.status(500).json({ error: 'server error' });
+        } catch (error) {            
+            return res.status(500).json({ error: 'server error' });
         }
     });
 
     server.get('/hfswapi/getWeightOnPlanetRandom', async (req, res) => {
         try {
             app.db.populateDB();
-        const people= await app.db.swPeople.findByPk(1,{
-            attributes: ['mass'], 
+            const planetId =1;
+            const peopleId =1;
+
+        const people= await app.db.swPeople.findByPk(peopleId,{
+            attributes: ['mass','homeworld_id'], 
             });
-        const planet = await app.db.swPlanet.findByPk(1,{
+            const homeId=people.homeworld_id;
+        const planet = await app.db.swPlanet.findByPk(planetId,{
             attributes: ['gravity'], 
               });
+            
+              
+              if(homeId=='/planets/'+planetId){
+                  return res.status(500).json({ error: 'se está tratando de calcular el peso en el planeta natal' });   
+              };
       
         const weight = await   app.swapiFunctions.getWeightOnPlanet(people.mass,planet.gravity)
         app.db.logging.create({
@@ -75,7 +82,7 @@ const applySwapiEndpoints = (server, app) => {
             headers: req.headers,
             ip: req.ip
         });
-     res.send(JSON.stringify(weight));
+        res.send(JSON.stringify(weight));
         } catch (error) {
             return res.status(500).json({ error: 'server error' });   
         }
